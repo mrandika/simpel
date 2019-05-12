@@ -31,7 +31,14 @@ Route::group(['prefix' => 'pusat', 'middleware' => ['auth','role:Pusat']], funct
 });
 
 Route::post('/validate/tps', 'TPSValidator@validateData')->name('tps.validate');
+Route::post('/validate/voters', 'VotersController@validateVoters')->name('voters.validate');
 
-Route::get('/vote', function () {
-    return view('vote');
+Route::post('/voters/submit', 'VotersController@vote')->name('voters.submit');
+
+Route::get('/voters', function () {
+    return view('voters-input');
 })->name('vote.home');
+
+Route::get('/voters/pick', function () {
+    return view('vote');
+})->name('vote.input');

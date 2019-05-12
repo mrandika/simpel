@@ -19,26 +19,17 @@ $tps = DB::table('vote_places')->get();
 
 <body>
     <div class="container">
-        @if ($errors->any())
-        <div class="alert alert-danger" role="alert">
-            <div class="alert alert-danger alert-has-icon">
-                <div class="alert-icon"><i class="fas fa-exclamation-circle"></i></i></div>
-                <div class="alert-body">
-                    <div class="alert-title">Error</div>
-                    <ol>
-                        @foreach ($errors->all() as $error)
-                        <li>
-                            <p class="mb-0">{{ $error }}</p>
-                        </li>
-                        @endforeach
-                    </ol>
-                </div>
-            </div>
-
-        </div>
-
-        @endif
         <div class="p-5">
+            @if ($errors->any())
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">Error!</h4>
+                <hr>
+                @foreach ($errors->all() as $error)
+                <p class="mb-0">{{$error}}</p>
+                @endforeach
+            </div>
+            @endif
+
             <h1>Halo!</h1>
             <p>Mari mulai</p>
             <form action="{{ route('tps.validate') }}" method="post">

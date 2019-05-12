@@ -15,6 +15,7 @@ class CreateCandidatesTable extends Migration
     {
         Schema::create('candidates', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('image', 50);
             $table->string('candidatesName', 50);
             $table->string('candidatesSex', 15);
             $table->string('candidatesJobs');
@@ -29,6 +30,7 @@ class CreateCandidatesTable extends Migration
         DB::table('candidates')->insert(
             [
                 'id' => 1,
+                'image' => 'CALON_Nurhadi-Aldo.png',
                 'candidatesName' => "Nurhadi",
                 'candidatesSex' => "Laki-Laki",
                 'candidatesJobs' => "Kang Pijet",
@@ -43,6 +45,7 @@ class CreateCandidatesTable extends Migration
         DB::table('candidates')->insert(
             [
                 'id' => 2,
+                'image' => 'CALON_Iras-Itis.png',
                 'candidatesName' => "Iras",
                 'candidatesSex' => "Perempuan",
                 'candidatesJobs' => "Pengajar",

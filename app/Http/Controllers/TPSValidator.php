@@ -9,14 +9,6 @@ class TPSValidator extends Controller
 {
     //
     function validateData(Request $request) {
-        $validatedData = $request->validate([
-            'provinces' => 'required',
-            'districts' => 'required',
-            'subdistricts' => 'required',
-            'urbanvillages' => 'required',
-            'tpsid' => 'required',
-            'uid' => 'required',
-        ]);
 
         $provinces = $request->post('provinces');
         $districts = $request->post('districts');
@@ -34,10 +26,15 @@ class TPSValidator extends Controller
             ['uid', '=', $uid]
         ])->first();
 
-        if ($tpsUid != null) {
-            return redirect()->route('vote.home');
-        } else {
-            return redirect()->away('/')->with('error', 'Data invalid');
-        }
+        $validatedData = $request->validate([
+            'provinces' => 'required',
+            'districts' => 'required',
+            'subdistricts' => 'required',
+            'urbanvillages' => 'required',
+            'tpsid' => 'required',
+            'uid' => 'required|in:'.$tpsUid->uid,
+        ]);
+
+        return redirect()->route('vote.home')->with('access', str_random(10));
     }
 }
