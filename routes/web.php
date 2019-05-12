@@ -42,3 +42,7 @@ Route::get('/voters', function () {
 Route::get('/voters/pick', function () {
     return view('vote');
 })->name('vote.input');
+
+Route::get('/vote/count', function () {
+    return view('vote-count');
+})->name('vote.count');
