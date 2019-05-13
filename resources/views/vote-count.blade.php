@@ -2,10 +2,18 @@
 
 @section('content')
 @php
-    $candidates = DB::table('candidates')->get();
-    $voters = DB::table('voters')->count();
+$candidates = DB::table('candidates')->get();
+$voters = DB::table('voters')->count();
+$voted = DB::table('voters')->where('isVoted', 1)->count();
+
+$validPoll = round(($voted/$voters)*100)
 @endphp
 <div class="container">
+    <b>Suara Masuk: </b>
+    <div class="progress mb-5">
+        <div class="progress-bar progress-bar-striped" role="progressbar" style="width: {{$validPoll}}%" aria-valuenow="{{$validPoll}}"
+            aria-valuemin="0" aria-valuemax="100">{{$validPoll}}%</div>
+    </div>
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -23,7 +31,9 @@
             </tr>
             <tr>
                 @foreach ($candidates as $candidate)
-                <td class="text-center"><h1>{{round(($candidate->voteCount/$voters)*100)}}%</h1></td>
+                <td class="text-center">
+                    <h1>{{round(($candidate->voteCount/$voters)*100)}}%</h1>
+                </td>
                 @endforeach
             </tr>
         </tbody>
