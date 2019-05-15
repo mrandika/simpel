@@ -17,16 +17,24 @@ class VotersController extends Controller
             'idektp' => 'required',
         ]);
 
-        $session = $request->post('session');
+        $tpsId = $request->post('tpsId');
         $uid = $request->post('idektp');
+
         $votersData = DB::table('voters')->where('rfid', $uid)->first();
+        $voters = DB::table('voters')->select('isVoted', 'voteAt')->where('rfid', $uid)->first();
 
-        $voters = DB::table('voters')->select('isVoted')->where('rfid', $uid)->first();
-
-        if ($voters->isVoted != 1) {
-            return redirect()->route('vote.input')->with('data', $votersData)->with('id', $uid);
+        if ($voters != null) {
+            if ($voters->isVoted != 1) {
+                if ($voters->voteAt == $tpsId) {
+                    return redirect()->route('vote.input')->with('data', $votersData)->with('id', $uid);
+                } else {
+                    return redirect()->route('vote.home')->with('access', str_random(10))->with('error', "Your data is unavailable at this TPS")->with('tps', $tpsId);
+                }
+            } else {
+                return redirect()->route('vote.home')->with('access', str_random(10))->with('error', "You already voted")->with('tps', $tpsId);
+            }
         } else {
-            return redirect()->route('vote.home')->with('access', str_random(10))->with('error', "You already voted");
+            return redirect()->route('vote.home')->with('access', str_random(10))->with('error', "Your data is unavailable")->with('tps', $tpsId);
         }
     }
 

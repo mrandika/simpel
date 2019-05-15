@@ -10,7 +10,7 @@ $access = Session::get('access');
         <div class="col-md-12">
             @if (\Session::has('success'))
             <div class="alert alert-success alert-has-icon">
-                <div class="alert-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="alert-icon"><i class="far fa-check-circle"></i></div>
                 <div class="alert-body">
                     <div class="alert-title">Terimakasih!</div>
                 </div>
@@ -18,7 +18,7 @@ $access = Session::get('access');
             @endif
             @if (\Session::has('error'))
             <div class="alert alert-danger alert-has-icon">
-                <div class="alert-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="alert-icon"><i class="far fa-times-circle"></i></div>
                 <div class="alert-body">
                 <div class="alert-title">{{ \Session::get('error') }}</div>
                 </div>
@@ -42,6 +42,7 @@ $access = Session::get('access');
                     <form action="{{ route('voters.validate') }}" method="post">
                         @csrf
                         <input type="hidden" name="session" value="{{$access}}">
+                    <input type="hidden" name="tpsId" value="{{Session::get('tps')}}">
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1">E-KTP</span>

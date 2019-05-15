@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class TPSValidator extends Controller
+class TPSController extends Controller
 {
     //
     function validateData(Request $request) {
@@ -16,6 +16,15 @@ class TPSValidator extends Controller
         $urbanvillages = $request->post('urbanvillages');
         $tpsid = $request->post('tpsid');
         $uid = $request->post('uid');
+
+        $tpsNo = DB::table('vote_places')->select('id')->where([
+            ['provinceId', '=', $provinces],
+            ['districtId', '=', $districts],
+            ['subDistrictId', '=', $subdistricts],
+            ['urbanVillageId', '=', $urbanvillages],
+            ['number', '=', $tpsid],
+            ['uid', '=', $uid]
+        ])->first();
 
         $tpsUid = DB::table('vote_places')->select('uid')->where([
             ['provinceId', '=', $provinces],
@@ -35,6 +44,6 @@ class TPSValidator extends Controller
             'uid' => 'required|in:'.$tpsUid->uid,
         ]);
 
-        return redirect()->route('vote.home')->with('access', str_random(10));
+        return redirect()->route('vote.home')->with('access', str_random(10))->with('tps', $tpsNo->id);
     }
 }
