@@ -15,6 +15,7 @@ $districts = DB::table('districts')->get();
 $subdistricts = DB::table('sub_districts')->get();
 $urbanvillages = DB::table('urban_villages')->get();
 $tps = DB::table('vote_places')->get();
+
 @endphp
 
 <body>
@@ -36,56 +37,58 @@ $tps = DB::table('vote_places')->get();
                 @csrf
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <label class="input-group-text" for="inputGroupSelect01">Provinsi</label>
+                        <label class="input-group-text" for="provSelect">Provinsi</label>
                     </div>
-                    <select class="custom-select" id="inputGroupSelect01" name="provinces">
+                    <select class="custom-select" id="provSelect" name="provinces">
                         <option selected>Choose...</option>
                         @foreach ($provinces as $province)
-                        <option value="{{$province->id}}">{{$province->name}}</option>
+                        <option class="{{$province->name}}" value="{{$province->id}}">{{$province->name}}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <label class="input-group-text" for="inputGroupSelect01">Kabupaten</label>
+                        <label class="input-group-text" for="discSelect">Kabupaten</label>
                     </div>
-                    <select class="custom-select" id="inputGroupSelect01" name="districts">
+                    <select class="custom-select" id="discSelect" name="districts">
                         <option selected>Choose...</option>
                         @foreach ($districts as $district)
-                        <option value="{{$district->id}}">{{$district->name}}</option>
+                        <option
+                            class="{{ DB::table('provinces')->select('name')->where('id', $district->provinceId)->first()->name }}"
+                            value="{{$district->id}}">{{$district->name}}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <label class="input-group-text" for="inputGroupSelect01">Kecamatan</label>
+                        <label class="input-group-text" for="subDiscSelect">Kecamatan</label>
                     </div>
-                    <select class="custom-select" id="inputGroupSelect01" name="subdistricts">
+                    <select class="custom-select" id="subDiscSelect" name="subdistricts">
                         <option selected>Choose...</option>
                         @foreach ($subdistricts as $subdistrict)
-                        <option value="{{$subdistrict->id}}">{{$subdistrict->name}}</option>
+                    <option class="{{ DB::table('districts')->select('name')->where('id', $subdistrict->districtId)->first()->name }}" value="{{$subdistrict->id}}">{{$subdistrict->name}}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <label class="input-group-text" for="inputGroupSelect01">Kelurahan</label>
+                        <label class="input-group-text" for="urbanVillageSelect">Kelurahan</label>
                     </div>
-                    <select class="custom-select" id="inputGroupSelect01" name="urbanvillages">
+                    <select class="custom-select" id="urbanVillageSelect" name="urbanvillages">
                         <option selected>Choose...</option>
                         @foreach ($urbanvillages as $urbanvillage)
-                        <option value="{{$urbanvillage->id}}">{{$urbanvillage->name}}</option>
+                    <option class="{{ DB::table('sub_districts')->select('name')->where('id', $urbanvillage->subDistrictId)->first()->name }}" value="{{$urbanvillage->id}}">{{$urbanvillage->name}}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <label class="input-group-text" for="inputGroupSelect01">TPS</label>
+                        <label class="input-group-text" for="tpsSelect">TPS</label>
                     </div>
-                    <select class="custom-select" id="inputGroupSelect01" name="tpsid">
+                    <select class="custom-select" id="tpsSelect" name="tpsid">
                         <option selected>Choose...</option>
                         @foreach ($tps as $place)
-                        <option value="{{$place->id}}">{{$place->number}}</option>
+                        <option class="{{ DB::table('urban_villages')->select('name')->where('id', $place->urbanVillageId)->first()->name }}" value="{{$place->id}}">{{$place->number}}</option>
                         @endforeach
                     </select>
                 </div>
@@ -103,5 +106,64 @@ $tps = DB::table('vote_places')->get();
         </div>
     </div>
 </body>
+
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script>
+    $(function () {
+        $("#provSelect").on("change", function () {
+            var levelClass = $('#provSelect').find('option:selected').attr('class');
+            $('#discSelect option').each(function () {
+                var self = $(this);
+                if (self.hasClass(levelClass)) {
+                    self.show();
+                } else {
+                    self.hide();
+                }
+            });
+        });
+    });
+
+    $(function() {
+        $("#discSelect").on("change", function () {
+            var levelClass = $('#discSelect').find('option:selected').text();
+            $('#subDiscSelect option').each(function () {
+                var self = $(this);
+                if (self.hasClass(levelClass)) {
+                    self.show();
+                } else {
+                    self.hide();
+                }
+            });
+        });
+    });
+
+    $(function() {
+        $("#subDiscSelect").on("change", function () {
+            var levelClass = $('#subDiscSelect').find('option:selected').text();
+            $('#urbanVillageSelect option').each(function () {
+                var self = $(this);
+                if (self.hasClass(levelClass)) {
+                    self.show();
+                } else {
+                    self.hide();
+                }
+            });
+        });
+    });
+
+    $(function() {
+        $("#urbanVillageSelect").on("change", function () {
+            var levelClass = $('#urbanVillageSelect').find('option:selected').text();
+            $('#tpsSelect option').each(function () {
+                var self = $(this);
+                if (self.hasClass(levelClass)) {
+                    self.show();
+                } else {
+                    self.hide();
+                }
+            });
+        });
+    });
+</script>
 
 </html>

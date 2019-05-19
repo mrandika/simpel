@@ -25,11 +25,7 @@ class VotersController extends Controller
 
         if ($voters != null) {
             if ($voters->isVoted != 1) {
-                if ($voters->voteAt == $tpsId) {
-                    return redirect()->route('vote.input')->with('data', $votersData)->with('id', $uid);
-                } else {
-                    return redirect()->route('vote.home')->with('access', str_random(10))->with('error', "Your data is unavailable at this TPS")->with('tps', $tpsId);
-                }
+                return redirect()->route('vote.input')->with('data', $votersData)->with('id', $uid)->with('tps', $tpsId);
             } else {
                 return redirect()->route('vote.home')->with('access', str_random(10))->with('error', "You already voted")->with('tps', $tpsId);
             }
@@ -39,28 +35,35 @@ class VotersController extends Controller
     }
 
     function vote(Request $request) {
+        $tps = $request->post('tpsId');
         $uid = $request->post('idektp');
         $picked = $request->post('candidates');
 
         $validatedData = $request->validate([
             'candidates' => 'required',
             'idektp' => 'required',
+            'tpsId' => 'required',
         ]);
 
-        $currentVoteCount = DB::table('candidates')->select('voteCount')->where('id', $picked)->first();
+        $votersData = DB::table('voters')->select('voteAt')->where('rfid', $uid)->first();
 
-        DB::table('voters')->where('rfid', $uid)->update(
-            [
-                'isVoted' => 1
-            ]
-        );
+        if ($votersData->voteAt != $tps) {
+            return redirect()->route('vote.home')->with('access', str_random(10))->with('error', "Your data is unavailable at this TPS.\nYour vote didn't count.")->with('tps', $tps);
+        }
 
-        DB::table('candidates')->where('id', $picked)->update(
-            [
-                'voteCount' => $currentVoteCount->voteCount + 1
-            ]
-        );
+        $candidates = Candidate::find($picked);
+        $currentVoteCount = $candidates->voteCount;
 
-        return redirect()->route('vote.home')->with('success', "ok")->with('access', str_random(10));
+        $voters = DB::table('voters')->select('isVoted')->where('rfid', $uid)->first();
+
+        $voters = Voters::find($uid);
+        $voters->isVoted = 1;
+
+        $candidates->voteCount = $currentVoteCount + 1;
+
+        $candidates->save();
+        $voters->save();
+
+        return redirect()->route('vote.home')->with('access', str_random(10))->with('success', "ok")->with('tps', $tps);;
     }
 }

@@ -10,10 +10,11 @@ $validPoll = round(($voted/$voters)*100)
 @endphp
 <div class="container">
     <b>Suara Masuk: </b>
-    <div class="progress mb-5">
+    <div class="progress mb-3">
         <div class="progress-bar progress-bar-striped" role="progressbar" style="width: {{$validPoll}}%" aria-valuenow="{{$validPoll}}"
             aria-valuemin="0" aria-valuemax="100">{{$validPoll}}%</div>
     </div>
+    <p class="mb-5">{{$voted}} suara</p>
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -33,6 +34,7 @@ $validPoll = round(($voted/$voters)*100)
                 @foreach ($candidates as $candidate)
                 <td class="text-center">
                     <h1>{{round(($candidate->voteCount/$voters)*100)}}%</h1>
+                <p>{{$candidate->voteCount}} suara</p>
                 </td>
                 @endforeach
             </tr>

@@ -5,6 +5,7 @@
 @php
 $data = Session::get('data');
 $uid = Session::get('id');
+$tps = Session::get('tps');
 $candidates = DB::table('candidates')->get();
 @endphp
 <div class="container">
@@ -19,6 +20,7 @@ $candidates = DB::table('candidates')->get();
                 <form action="{{ route('voters.submit') }}" method="post">
                     @csrf
                     <input type="hidden" name="idektp" value="{{$uid}}">
+                    <input type="hidden" name="tpsId" value="{{$tps}}">
                     <table class="table table-bordered">
                         <thead>
                             <tr>

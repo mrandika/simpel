@@ -25,14 +25,16 @@ $validPoll = round(($voted/$votersHere->count())*100)
             <thead>
                 <tr>
                     <th scope="col" class="text-center">NIK</th>
+                    <th scope="col" class="text-center">RFID</th>
                     <th scope="col" class="text-center">Nama</th>
                     <th scope="col" class="text-center">Status</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($votersHere->get() as $voters)
+                @foreach ($votersHere->paginate(50) as $voters)
                 <tr>
                 <th scope="row">{{$voters->nik}}</th>
+                <td>{{$voters->rfid}}</td>
                     <td>{{$voters->name}}</td>
                     <td class="text-center">
                         @if ($voters->isVoted == 1)
@@ -45,6 +47,7 @@ $validPoll = round(($voted/$votersHere->count())*100)
                 @endforeach
             </tbody>
         </table>
+        {{$votersHere->paginate(50)->links()}}
     </div>
 </div>
 @endsection

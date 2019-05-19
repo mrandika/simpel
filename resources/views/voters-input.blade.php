@@ -4,6 +4,7 @@
 
 @php
 $access = Session::get('access');
+$tpsId = Session::get('tps');
 @endphp
 <div class="container">
     <div class="justify-content-center">
@@ -42,7 +43,7 @@ $access = Session::get('access');
                     <form action="{{ route('voters.validate') }}" method="post">
                         @csrf
                         <input type="hidden" name="session" value="{{$access}}">
-                    <input type="hidden" name="tpsId" value="{{Session::get('tps')}}">
+                    <input type="hidden" name="tpsId" value="{{$tpsId}}">
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1">E-KTP</span>
