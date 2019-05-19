@@ -40,7 +40,6 @@ class VotersController extends Controller
         $picked = $request->post('candidates');
 
         $validatedData = $request->validate([
-            'candidates' => 'required',
             'idektp' => 'required',
             'tpsId' => 'required',
         ]);
@@ -51,17 +50,15 @@ class VotersController extends Controller
             return redirect()->route('vote.home')->with('access', str_random(10))->with('error', "Your data is unavailable at this TPS.\nYour vote didn't count.")->with('tps', $tps);
         }
 
-        $candidates = Candidate::find($picked);
-        $currentVoteCount = $candidates->voteCount;
-
-        $voters = DB::table('voters')->select('isVoted')->where('rfid', $uid)->first();
+        if ($picked != null) {
+            $candidates = Candidate::find($picked);
+            $currentVoteCount = $candidates->voteCount;
+            $candidates->voteCount = $currentVoteCount + 1;
+            $candidates->save();
+        }
 
         $voters = Voters::find($uid);
         $voters->isVoted = 1;
-
-        $candidates->voteCount = $currentVoteCount + 1;
-
-        $candidates->save();
         $voters->save();
 
         return redirect()->route('vote.home')->with('access', str_random(10))->with('success', "ok")->with('tps', $tps);;
