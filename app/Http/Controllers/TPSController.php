@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+
+use App\VotePlace;
 
 class TPSController extends Controller
 {
@@ -17,7 +18,7 @@ class TPSController extends Controller
         $tpsid = $request->post('tpsid');
         $uid = $request->post('uid');
 
-        $tpsNo = DB::table('vote_places')->select('id')->where([
+        $tpsNo = VotePlace::select('id')->where([
             ['provinceId', '=', $provinces],
             ['districtId', '=', $districts],
             ['subDistrictId', '=', $subdistricts],
@@ -26,7 +27,7 @@ class TPSController extends Controller
             ['uid', '=', $uid]
         ])->first();
 
-        $tpsUid = DB::table('vote_places')->select('uid')->where([
+        $tpsUid = VotePlace::select('uid')->where([
             ['provinceId', '=', $provinces],
             ['districtId', '=', $districts],
             ['subDistrictId', '=', $subdistricts],

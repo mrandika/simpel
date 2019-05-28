@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 use App\Voters;
 use App\Candidate;
@@ -20,8 +19,9 @@ class VotersController extends Controller
         $tpsId = $request->post('tpsId');
         $uid = $request->post('idektp');
 
-        $votersData = DB::table('voters')->where('rfid', $uid)->first();
-        $voters = DB::table('voters')->select('isVoted', 'voteAt')->where('rfid', $uid)->first();
+        // TODO: Error Handling Here, if the data returns null.
+        $votersData = Voters::find($uid)->first();
+        $voters = Voters::find($uid)->select('isVoted', 'voteAt')->first();
 
         if ($voters != null) {
             if ($voters->isVoted != 1) {
